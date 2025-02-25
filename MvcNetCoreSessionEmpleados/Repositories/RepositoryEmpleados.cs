@@ -27,5 +27,37 @@ namespace MvcNetCoreSessionEmpleados.Repositories
                            select datos;
             return await consulta.FirstOrDefaultAsync();
         }
+
+        public async Task<List<Empleado>> 
+            GetEmpleadosSessionAsync(List<int> ids)
+        {
+            var consulta = from datos in this.context.Empleados
+                           where ids.Contains(datos.IdEmpleado)
+                           select datos;
+            if (consulta.Count() == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return await consulta.ToListAsync();
+            }
+        }
+
+        public async Task<List<Empleado>>
+            GetEmpleadosNotSessionAsync(List<int> ids)
+        {
+            var consulta = from datos in this.context.Empleados
+                           where ids.Contains(datos.IdEmpleado) == false
+                           select datos;
+            if (consulta.Count() == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return await consulta.ToListAsync();
+            }
+        }
     }
 }
