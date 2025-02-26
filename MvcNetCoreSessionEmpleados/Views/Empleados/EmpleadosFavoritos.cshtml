@@ -1,26 +1,27 @@
-﻿@model List<Empleado>
+﻿@{
+    List<Empleado> favoritos =
+            memoryCache.Get<List<Empleado>>("FAVORITOS");
+}
 
 @{
-    ViewData["Title"] = "EmpleadosAlmacenadosV5";
+    ViewData["Title"] = "EmpleadosFavoritos";
 }
 
-<h1 style="color:blue">Empleados Almacenados Session V5</h1>
-
-@if (Context.Session.GetString("IDSEMPLEADOS") == null)
-{
-    <h2 style="color:red">
-        No existen empleados en Session
-    </h2>
-}
+<h1 style="color:fuchsia">Empleados Favoritos</h1>
+<img src="~/images/love.png" style="width: 100px; height: 100px" />
 
 <p>
     <a asp-controller="Empleados" asp-action="SessionEmpleadosV5">
         Volver a almacenar empleados V5
     </a>
 </p>
-@if (Model != null)
-{
-    <table class="table table-bordered table-dark">
+
+@if (favoritos == null){
+    <h2 style="color:red">
+        No existen Empleados favoritos
+    </h2>
+}else{
+    <table class="table table-bordered table-danger">
         <thead>
             <tr>
                 <th>Apellido</th>
@@ -31,7 +32,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (Empleado emp in Model)
+            @foreach (Empleado emp in favoritos)
             {
                 <tr>
                     <td>@emp.Apellido</td>
@@ -40,10 +41,10 @@
                     <td>@emp.IdDepartamento</td>
                     <td>
                         <a asp-controller="Empleados"
-                           asp-action="EmpleadosAlmacenadosV5"
-                           asp-route-ideliminar="@emp.IdEmpleado">
-                            Eliminar Session
-                       </a>
+                            asp-action="EmpleadosFavoritos"
+                            asp-route-ideliminar="@emp.IdEmpleado">
+                            <img src="~/images/trash.png" style="width: 45px; height: 45px" />
+                        </a>
                     </td>
                 </tr>
             }

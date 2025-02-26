@@ -1,4 +1,6 @@
-﻿@using MvcNetCoreSessionEmpleados
+﻿@using Microsoft.Extensions.Caching.Memory
+@using MvcNetCoreSessionEmpleados
 @using MvcNetCoreSessionEmpleados.Models
 @using MvcNetCoreSessionEmpleados.Extensions
+@inject IMemoryCache memoryCache
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

@@ -4,13 +4,29 @@
     //NECESITAMOS SESSION PARA SABER EL DIBUJO A REALIZAR
     List<int> ids =
     Context.Session.GetObject<List<int>>("IDSEMPLEADOS");
+
+    //NECESITAMOS MEMORYCACHE PARA LOS DIBUJOS
+    List<Empleado> favoritos =
+        memoryCache.Get<List<Empleado>>("FAVORITOS");
 }
 
 <h1 style="color:blue">Session Empleados V5</h1>
 
+@if (favoritos != null){
+    <h3 style="background-color:lightgreen">
+        Favoritos almacenados: @favoritos.Count
+    </h3>
+}
+
+@if (ids != null){
+    <h3 style="background-color:blue; color:white">
+        Empleados Session: @ids.Count
+    </h3>
+}
+
 <p>
     <a asp-controller="Empleados"
-       asp-action="EmpleadosAlmacenadosV5">
+    asp-action="EmpleadosAlmacenadosV5">
         Empleados Almacenados V5
     </a>
 </p>
@@ -22,11 +38,34 @@
     {
         <li class="list-group-item list-group-item-info">
             @empleado.Apellido
+            @if (favoritos == null){
+                <a asp-controller="Empleados"
+                   asp-action="SessionEmpleadosV5"
+                   asp-route-idfavorito="@empleado.IdEmpleado">
+                    <img src="~/images/corazonvacio.png" style="width: 30px; height: 30px" />
+                </a>
+            }else{
+                //DEBEMOS PREGUNTAR SI EXISTE NUESTRO EMPLEADO
+                //CON EL ID QUE ESTAMOS RECORRIENDO DENTRO DE LA COLECCION
+                Empleado empFavorito =
+                favoritos.Find(x => x.IdEmpleado == empleado.IdEmpleado);
+                if (empFavorito != null){
+                    <img src="~/images/corazon.png" style="width: 30px; height: 30px" />
+                }else{
+                    <a asp-controller="Empleados"
+                       asp-action="SessionEmpleadosV5"
+                       asp-route-idfavorito="@empleado.IdEmpleado">
+                        <img src="~/images/corazonvacio.png" style="width: 30px; height: 30px" />
+                    </a>
+                }
+            }
+
             @* PREGUNTAMOS SI EXISTE SESSION *@
             @if (ids == null) {
                 <a asp-controller="Empleados"
                    asp-action="SessionEmpleadosV5"
-                   asp-route-idempleado="@empleado.IdEmpleado">
+                   asp-route-idempleado="@empleado.IdEmpleado"
+                    class="btn btn-warning">
                     Almacenar empleado
                 </a>
             }else{
@@ -39,7 +78,8 @@
                 }else{
                     <a asp-controller="Empleados"
                        asp-action="SessionEmpleadosV5"
-                       asp-route-idempleado="@empleado.IdEmpleado">
+                       asp-route-idempleado="@empleado.IdEmpleado"
+                       class="btn btn-warning">
                         Almacenar empleado
                     </a>
                 }
